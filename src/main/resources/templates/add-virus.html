@@ -14,88 +14,73 @@
             <form th:action="@{/viruses/add}" method="post" th:object="${bindingModel}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('name')} ? 'text-danger'">
                     <label for="inputVirusName">Name</label>
-                    <input type="text" class="form-control" id="inputVirusName">
+                    <input type="text" class="form-control" id="inputVirusName" th:field="*{name}">
                     <small th:each="error : ${#fields.errors('name')}" th:text="${error}"></small>
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'text-danger'">
                     <label for="inputVirusDescription">Description</label>
-                    <textarea class="form-control" id="inputVirusDescription" rows="3"></textarea>
+                    <textarea class="form-control" id="inputVirusDescription" th:field="*{description}" rows="3"></textarea>
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('sideEffects')} ? 'text-danger'">
                     <label for="inputVirusSideEffect">Side Effect</label>
-                    <input type="number" class="form-control" id="inputVirusSideEffect">
+                    <input type="text" class="form-control" id="inputVirusSideEffect" th:field="*{sideEffects}">
                 </div>
                 <div class="form-group">
                     <label for="inputVirusCreator">Creator</label>
-                    <input type="text" class="form-control" id="inputVirusCreator" />
+                    <input type="text" class="form-control" id="inputVirusCreator" th:field="*{creator}"/>
                 </div>
                 <div class="form-check mt-3">
-                    <input class="form-check-input" type="checkbox" value="" id="inputVirusDeadly">
-                    <label class="form-check-label" for="inputVirusDeadly">
+                    <input class="form-check-input" type="checkbox" value="" id="inputVirusDeadly" th:field="*{deadly}">
+                    <label class="form-check-label" for="inputVirusDeadly" >
                         Is Deadly?
                     </label>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="inputVirusCurable">
-                    <label class="form-check-label" for="inputVirusCurable">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="inputVirusCurable" th:field="*{curable}">
+                    <label class="form-check-label" for="inputVirusCurable" >
                         Is Curable?
                     </label>
                 </div>
-                <th:block>
-                    <div class="form-check mt-3">
-                        <input class="form-check-input" type="radio" name="inputVirusMutation1" id="inputVirusMutation1" value="ZOMBIE">
-                        <label class="form-check-label" for="inputVirusMutation1">
-                            ZOMBIE
-                        </label>
+
+                    <div class="form-check" th:each="mutation : ${T(residentevil.domain.entities.Mutation).values()}" th:classappend="${#fields.hasErrors('mutation')} ? 'text-danger'">
+                        <input class="form-check-input" type="radio"
+                               name="inputVirusMutation" id="inputVirusMutation" th:value="${mutation}" th:text="${mutation}" th:field="*{mutation}">
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="inputVirusMutation2" id="inputVirusMutation2" value="T_078_TYRANT">
-                        <label class="form-check-label" for="inputVirusMutation2">
-                            T_078_TYRANT
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="inputVirusMutation2" id="inputVirusMutation3" value="GIANT_SPIDER">
-                        <label class="form-check-label" for="inputVirusMutation2">
-                            GIANT_SPIDER
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="inputVirusMutation2" id="inputVirusSaveHumanity" value="GIANT_SPIDER">
+                        <input class="form-check-input" type="radio"
+                               name="inputVirusSaveHumanity" id="inputVirusSaveHumanity" value="inputVirusSaveHumanity">
                         <label class="form-check-label" for="inputVirusSaveHumanity">
                             Save Humanity
                         </label>
                     </div>
-                </th:block>
-                <div class="form-group mt-3">
+                <div class="form-group mt-3" th:classappend="${#fields.hasErrors('turnoverRate')} ? 'text-danger'">
                     <label for="inputVirusTurnoverRate">Turnover Rate</label>
-                    <input type="number" class="form-control" id="inputVirusTurnoverRate">
+                    <input type="number" class="form-control" id="inputVirusTurnoverRate" th:field="*{turnoverRate}">
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hoursUntilTurn')} ? 'text-danger'">
                     <label for="inputVirusHoursUntilTurn">Hours Until Turn</label>
-                    <input type="number" class="form-control" id="inputVirusHoursUntilTurn">
+                    <input type="number" class="form-control" id="inputVirusHoursUntilTurn" th:field="*{hoursUntilTurn}">
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('magnitude')} ? 'text-danger'">
                     <label for="inputVirusMagnitude">Magnitude</label>
-                    <select class="form-control" id="inputVirusMagnitude">
-                        <option>Low</option>
-                        <option>Medium</option>
-                        <option>High</option>
+                    <select class="form-control" id="inputVirusMagnitude" th:field="*{magnitude}">
+                        <option th:each="magnitude : ${T(residentevil.domain.entities.Magnitude).values()}"
+                                th:value="${magnitude}" th:text="${magnitude}" ></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="inputVirusReleaseDate">Release Date</label>
-                    <input type="date" class="form-control" id="inputVirusReleaseDate">
+                    <label for="inputVirusDate">Release Date</label>
+                    <input type="date" class="form-control" id="inputVirusDate" th:field="*{releasedOn}">
                 </div>
                 <div class="form-group">
                     <label for="inputVirusAffectedCapitals">Affected Capitals</label>
-                    <select multiple class="form-control" id="inputVirusAffectedCapitals">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                    <select multiple class="form-control" id="inputVirusAffectedCapitals" th:field="*{capitals}">
+                        <option th:each="capital : ${capitals}" th:value="${capital.id}"
+                                th:text="${capital.name}" ></option>
                     </select>
+                </div>
+                <div class="button-holder d-flex justify-content-center">
+                    <button type="submit" class="btn re-backgroud text-white">Spread!</button>
                 </div>
             </form>
         </div>

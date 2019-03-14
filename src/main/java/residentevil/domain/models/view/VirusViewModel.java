@@ -1,23 +1,19 @@
-package residentevil.domain.models.binding;
+package residentevil.domain.models.view;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import residentevil.domain.entities.Capital;
 import residentevil.domain.entities.Creator;
 import residentevil.domain.entities.Magnitude;
 import residentevil.domain.entities.Mutation;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public class VirusAddBindingModel {
+public class VirusViewModel {
 
     private String id;
     private String name;
     private String description;
-    private String sideEffects;
+        private String sideEffects;
     private Creator creator;
     private Boolean isDeadly;
     private Boolean isCurable;
@@ -28,11 +24,17 @@ public class VirusAddBindingModel {
     private LocalDate releasedOn;
     private List<String> capitals;
 
-    public VirusAddBindingModel() {
+    public VirusViewModel() {
     }
 
-    @NotNull
-    @Size(min = 3, max = 10, message = "Invalid name!")
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -41,8 +43,6 @@ public class VirusAddBindingModel {
         this.name = name;
     }
 
-    @NotNull
-    @Size(min = 5, max = 100, message = "Invalid description!")
     public String getDescription() {
         return this.description;
     }
@@ -51,7 +51,6 @@ public class VirusAddBindingModel {
         this.description = description;
     }
 
-    @Size(max = 50, message = "Side effects should contain max 50 symbols!")
     public String getSideEffects() {
         return this.sideEffects;
     }
@@ -84,7 +83,6 @@ public class VirusAddBindingModel {
         isCurable = curable;
     }
 
-    @NotNull
     public Mutation getMutation() {
         return this.mutation;
     }
@@ -93,8 +91,6 @@ public class VirusAddBindingModel {
         this.mutation = mutation;
     }
 
-    @Min(0)
-    @Max(100)
     public Integer getTurnoverRate() {
         return this.turnoverRate;
     }
@@ -103,8 +99,6 @@ public class VirusAddBindingModel {
         this.turnoverRate = turnoverRate;
     }
 
-    @Min(1)
-    @Max(12)
     public Integer getHoursUntilTurn() {
         return this.hoursUntilTurn;
     }
@@ -121,7 +115,6 @@ public class VirusAddBindingModel {
         this.magnitude = magnitude;
     }
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public LocalDate getReleasedOn() {
         return this.releasedOn;
     }
@@ -136,13 +129,5 @@ public class VirusAddBindingModel {
 
     public void setCapitals(List<String> capitals) {
         this.capitals = capitals;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

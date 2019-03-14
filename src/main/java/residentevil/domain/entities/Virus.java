@@ -127,7 +127,7 @@ public class Virus extends BaseEntity{
         this.releasedOn = releasedOn;
     }
 
-    @OneToMany(targetEntity = Capital.class)
+    @OneToMany(targetEntity = Capital.class, cascade = CascadeType.ALL)
     @JoinTable(name = "viruses_capitals",
             joinColumns = @JoinColumn(name = "virus_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "capital_id", referencedColumnName = "id"))
