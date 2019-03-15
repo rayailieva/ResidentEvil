@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import residentevil.domain.entities.Virus;
 import residentevil.domain.models.binding.VirusAddBindingModel;
 import residentevil.domain.models.service.VirusServiceModel;
 import residentevil.domain.models.view.CapitalListViewModel;
@@ -77,32 +78,13 @@ public class VirusController extends BaseController {
         return super.view("viruses", modelAndView);
     }
 
-    @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable(name = "id") String id,
-                               @ModelAttribute(name = "viewModel") VirusListViewModel viewModel,
-                               ModelAndView modelAndView) {
-
-        VirusServiceModel virusServiceModel =
-                this.virusService.findVirusById(id);
-
-        if (virusServiceModel == null) {
-            throw new IllegalArgumentException("Document not found!");
-        }
-
-        modelAndView.addObject("viewModel", this.modelMapper
-                .map(virusServiceModel, VirusViewModel.class));
-
-        return super.view("delete", modelAndView);
-    }
-
-    @PostMapping("/delete/{id}")
-    public ModelAndView deleteConfirm(@PathVariable(name = "id") String id,
-                                      @ModelAttribute(name = "viewModel") VirusListViewModel viewModel,
-                                      ModelAndView modelAndView) {
+    @RequestMapping(value = "/delete/{id}")
+    public ModelAndView delete(@PathVariable(name = "id") String id) {
 
         if(!this.virusService.deleteVirus(id)){
             throw new IllegalArgumentException("Something went wrong!");
         }
+
 
         return super.redirect("/");
     }

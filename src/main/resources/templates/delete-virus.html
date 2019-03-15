@@ -11,18 +11,18 @@
     <main>
         <div class="container mt-4">
             <h1>Spread a new Virus!</h1>
-            <form th:action="@{/delete/{id}}" method="post" th:object="${viewModel}">
+            <form method="post" th:object="${model}" th:action="@{/delete/{id}(id=${model.id})}">
                 <div class="form-group">
                     <label for="inputVirusName">Name</label>
-                    <input type="text" class="form-control" id="inputVirusName" th:value="${viewModel.name}" disabled>
+                    <input type="text" class="form-control" id="inputVirusName" th:value="${model.name}" disabled>
                 </div>
                 <div class="form-group">
                     <label for="inputVirusDescription">Description</label>
-                    <textarea class="form-control" id="inputVirusDescription" rows="3" th:value="${viewModel.description}" disabled></textarea>
+                    <textarea class="form-control" id="inputVirusDescription" rows="3" th:value="${model.description}" disabled></textarea>
                 </div>
                 <div class="form-group">
                     <label for="inputVirusSideEffect">Side Effect</label>
-                    <input type="text" class="form-control" id="inputVirusSideEffect" th:value="${viewModel.sideEffects}"  disabled>
+                    <input type="text" class="form-control" id="inputVirusSideEffect" th:value="${model.sideEffects}"  disabled>
                 </div>
                 <div class="form-group">
                     <label for="inputVirusCreator">Creator</label>
@@ -35,7 +35,7 @@
                     </label>
                 </div>
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="" id="inputVirusCurable" th:field="*{curable}" disabled>
+                    <input class="form-check-input" type="checkbox" value="" id="inputVirusCurable"  disabled>
                     <label class="form-check-label" for="inputVirusCurable" >
                         Is Curable?
                     </label>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="form-group">
                     <label for="inputVirusDate">Release Date</label>
-                    <input type="date" class="form-control" id="inputVirusDate" th:value="${viewModel.releasedOn}" disabled>
+                    <input type="date" class="form-control" id="inputVirusDate" th:value="${model.releasedOn}" disabled>
                 </div>
                 <div class="form-group">
                     <label for="inputVirusAffectedCapitals">Affected Capitals</label>

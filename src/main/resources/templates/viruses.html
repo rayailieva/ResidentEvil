@@ -19,6 +19,8 @@
                     <th scope="col">Name</th>
                     <th scope="col">Magnitude</th>
                     <th scope="col">Released On</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,7 +31,7 @@
                     <td th:text="${virus.magnitude}"></td>
                     <td th:text="${virus.releasedOn}"></td>
                     <td><a type="button" class="btn btn-light">Edit</a></td>
-                    <td><a type="button" th:href="@{/delete/{id}(id=${virus.id})}" class="btn btn-light">Delete</a></td>
+                    <td><a th:href="@{/delete/{id}(id=${virus.id})}" class="btn btn-light">Delete</a></td>
                 </tr>
                 </th:block>
                 </tbody>
