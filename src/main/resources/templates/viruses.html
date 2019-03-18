@@ -11,7 +11,6 @@
     <main>
         <div class="container mt-4">
             <h1>All Viruses</h1>
-            <form th:action="@{/viruses/show}" method="get" th:object="${viewModel}">
             <table class="table mt-3">
                 <thead>
                 <tr>
@@ -19,19 +18,19 @@
                     <th scope="col">Name</th>
                     <th scope="col">Magnitude</th>
                     <th scope="col">Released On</th>
-                    <th scope="col"></th>
+                    <th scope="col">Actions</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="virus : ${viruses}">
+                <th:block th:each="virus, iter : ${viruses}">
                 <tr>
-                    <th scope="row">1</th>
-                    <td th:text="${virus.name}"></td>
-                    <td th:text="${virus.magnitude}"></td>
-                    <td th:text="${virus.releasedOn}"></td>
-                    <td><a type="button" class="btn btn-light">Edit</a></td>
-                    <td><a th:href="@{/delete/{id}(id=${virus.id})}" class="btn btn-light">Delete</a></td>
+                    <td scope="col" th:text="${iter.index + 1}"></td>
+                    <td scope="col" th:text="${virus.name}"></td>
+                    <td scope="col"th:text="${virus.magnitude}"></td>
+                    <td scope="col"th:text="${virus.releasedOn}"></td>
+                    <td scope="col"><a class="btn btn-info"  th:href="@{/viruses/edit/{id}(id=${virus.id})}" th:text="Edit"></a></td>
+                    <td scope="col"><a class="btn btn-info"  th:href="@{/viruses/delete/{id}(id=${virus.id})}" th:text="Delete"></a></td>
                 </tr>
                 </th:block>
                 </tbody>

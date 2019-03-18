@@ -1,18 +1,17 @@
 package residentevil.domain.models.binding;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+import residentevil.common.annotations.DateBeforeToday;
 import residentevil.domain.entities.Creator;
 import residentevil.domain.entities.Magnitude;
 import residentevil.domain.entities.Mutation;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
-public class VirusAddBindingModel {
+public class VirusBindingModel {
 
     private String id;
     private String name;
@@ -28,11 +27,11 @@ public class VirusAddBindingModel {
     private LocalDate releasedOn;
     private List<String> capitals;
 
-    public VirusAddBindingModel() {
+    public VirusBindingModel() {
     }
 
-    @NotNull
-    @Size(min = 3, max = 10, message = "Invalid name!")
+    @NotNull(message = "Name cannot be null.")
+    @Length(min = 3, max = 10, message = "Invalid name.")
     public String getName() {
         return this.name;
     }
@@ -41,8 +40,8 @@ public class VirusAddBindingModel {
         this.name = name;
     }
 
-    @NotNull
-    @Size(min = 5, max = 100, message = "Invalid description!")
+    @NotNull(message = "Description cannot be null.")
+    @Length(min = 5, max = 100, message = "Invalid description.")
     public String getDescription() {
         return this.description;
     }
@@ -51,7 +50,8 @@ public class VirusAddBindingModel {
         this.description = description;
     }
 
-    @Size(max = 50, message = "Side effects should contain max 50 symbols!")
+    @NotNull(message = "Side effects cannot be null.")
+    @Length(max = 50, message = "Invalid side effects.")
     public String getSideEffects() {
         return this.sideEffects;
     }
@@ -60,6 +60,8 @@ public class VirusAddBindingModel {
         this.sideEffects = sideEffects;
     }
 
+
+    @NotNull(message = "Creator cannot be null.")
     public Creator getCreator() {
         return this.creator;
     }
@@ -84,7 +86,7 @@ public class VirusAddBindingModel {
         isCurable = curable;
     }
 
-    @NotNull
+    @NotNull(message = "Mutation cannot be null.")
     public Mutation getMutation() {
         return this.mutation;
     }
@@ -93,8 +95,9 @@ public class VirusAddBindingModel {
         this.mutation = mutation;
     }
 
-    @Min(0)
-    @Max(100)
+    @NotNull(message = "Turnover rate cannot be null.")
+    @Min(value = 0, message = "Invalid turnover rate")
+    @Max(value = 100, message = "Invalid turnover rate")
     public Integer getTurnoverRate() {
         return this.turnoverRate;
     }
@@ -103,8 +106,9 @@ public class VirusAddBindingModel {
         this.turnoverRate = turnoverRate;
     }
 
-    @Min(1)
-    @Max(12)
+    @NotNull(message = "Hours until turn cannot be null.")
+    @Min(value = 1, message = "Invalid hours until turn")
+    @Max(value = 12, message = "Invalid hours until turn")
     public Integer getHoursUntilTurn() {
         return this.hoursUntilTurn;
     }
@@ -121,6 +125,7 @@ public class VirusAddBindingModel {
         this.magnitude = magnitude;
     }
 
+    @DateBeforeToday(message = "Invalid Date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     public LocalDate getReleasedOn() {
         return this.releasedOn;
@@ -130,13 +135,6 @@ public class VirusAddBindingModel {
         this.releasedOn = releasedOn;
     }
 
-    public List<String> getCapitals() {
-        return this.capitals;
-    }
-
-    public void setCapitals(List<String> capitals) {
-        this.capitals = capitals;
-    }
 
     public String getId() {
         return this.id;
@@ -144,5 +142,15 @@ public class VirusAddBindingModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @NotNull(message = "You must select capitals")
+    @Size(min = 1, message = "You must select capitals")
+    public List<String> getCapitals() {
+        return this.capitals;
+    }
+
+    public void setCapitals(List<String> capitals) {
+        this.capitals = capitals;
     }
 }

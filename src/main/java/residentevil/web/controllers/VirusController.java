@@ -6,16 +6,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import residentevil.domain.entities.Virus;
-import residentevil.domain.models.binding.VirusAddBindingModel;
+import residentevil.domain.entities.Magnitude;
+import residentevil.domain.entities.Mutation;
+import residentevil.domain.models.binding.VirusBindingModel;
+import residentevil.domain.models.service.CapitalServiceModel;
 import residentevil.domain.models.service.VirusServiceModel;
 import residentevil.domain.models.view.CapitalListViewModel;
 import residentevil.domain.models.view.VirusListViewModel;
-import residentevil.domain.models.view.VirusViewModel;
 import residentevil.service.CapitalService;
 import residentevil.service.VirusService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Controller
@@ -35,8 +38,9 @@ public class VirusController extends BaseController {
 
     @GetMapping("/add")
     public ModelAndView add(ModelAndView modelAndView,
-                            @ModelAttribute(name = "bindingModel") VirusAddBindingModel bindingModel) {
+                            @ModelAttribute(name = "bindingModel") VirusBindingModel bindingModel) {
         modelAndView.addObject("bindingModel", bindingModel);
+
         modelAndView.addObject("capitals", this.capitalService.findAllCapitals()
                 .stream()
                 .map(c -> this.modelMapper.map(c, CapitalListViewModel.class))
@@ -46,7 +50,7 @@ public class VirusController extends BaseController {
     }
 
     @PostMapping("/add")
-    public ModelAndView addConfirm(@Valid @ModelAttribute(name = "bindingModel") VirusAddBindingModel bindingModel,
+    public ModelAndView addConfirm(@Valid @ModelAttribute(name = "bindingModel") VirusBindingModel bindingModel,
                                    BindingResult bindingResult, ModelAndView modelAndView) {
 
         if (bindingResult.hasErrors()) {
@@ -78,6 +82,34 @@ public class VirusController extends BaseController {
         return super.view("viruses", modelAndView);
     }
 
+    @GetMapping(value = "/edit/{id}")
+    public ModelAndView edit(@PathVariable(name = "id") String id ,ModelAndView modelAndView) {
+
+        VirusBindingModel virus = this.virusService.extractVirusByIdForEditOrDelete(id);
+        modelAndView.addObject("virusBindingModel", virus);
+
+        this.addObjectsInModelAndView(modelAndView);
+
+        return super.view("edit-virus", modelAndView);
+    }
+
+
+    @PostMapping(value = "/edit/{id}")
+    public ModelAndView editConfirm(@PathVariable(name = "id") String id ,ModelAndView modelAndView,  BindingResult bindingResult,
+                                    @Valid @ModelAttribute("virusBindingModel") VirusBindingModel virusBindingModel) {
+
+        if (bindingResult.hasErrors()) {
+            this.addObjectsInModelAndView(modelAndView);
+
+            return super.view("viruses/edit-virus", modelAndView);
+        }
+
+        this.virusService.editVirus(virusBindingModel);
+
+        return super.redirect("/");
+    }
+
+
     @RequestMapping(value = "/delete/{id}")
     public ModelAndView delete(@PathVariable(name = "id") String id) {
 
@@ -89,5 +121,9 @@ public class VirusController extends BaseController {
         return super.redirect("/");
     }
 
-
+    private void addObjectsInModelAndView(ModelAndView modelAndView) {
+        modelAndView.addObject("mutations", Mutation.values());
+        modelAndView.addObject("magnitudes", Magnitude.values());
+        modelAndView.addObject("capitals", new ArrayList<>(this.capitalService.findAllCapitals()));
+    }
 }
