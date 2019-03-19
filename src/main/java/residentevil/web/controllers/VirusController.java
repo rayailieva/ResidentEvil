@@ -38,13 +38,16 @@ public class VirusController extends BaseController {
 
     @GetMapping("/add")
     public ModelAndView add(ModelAndView modelAndView,
-                            @ModelAttribute(name = "bindingModel") VirusBindingModel bindingModel) {
-        modelAndView.addObject("bindingModel", bindingModel);
+                            @ModelAttribute(name = "virusBindingModel") VirusBindingModel bindingModel) {
+        modelAndView.addObject("virusBindingModel", bindingModel);
+
+        this.addObjectsInModelAndView(modelAndView);
 
         modelAndView.addObject("capitals", this.capitalService.findAllCapitals()
                 .stream()
                 .map(c -> this.modelMapper.map(c, CapitalListViewModel.class))
                 .collect(Collectors.toList()));
+
 
         return super.view("add-virus", modelAndView);
     }
@@ -54,7 +57,7 @@ public class VirusController extends BaseController {
                                    BindingResult bindingResult, ModelAndView modelAndView) {
 
         if (bindingResult.hasErrors()) {
-            modelAndView.addObject("bindingModel", bindingModel);
+            modelAndView.addObject("virusBindingModel", bindingModel);
 
             return super.view("add-virus", modelAndView);
         }
@@ -110,8 +113,19 @@ public class VirusController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/delete/{id}")
-    public ModelAndView delete(@PathVariable(name = "id") String id) {
+    @GetMapping("/delete/{id}")
+    public ModelAndView delete(@PathVariable(name = "id") String id, ModelAndView modelAndView) {
+
+        VirusBindingModel virus = this.virusService.extractVirusByIdForEditOrDelete(id);
+        modelAndView.addObject("virusBindingModel", virus);
+
+        this.addObjectsInModelAndView(modelAndView);
+
+        return super.view("delete-virus", modelAndView);
+    }
+
+    @PostMapping("/delete/{id}")
+    public ModelAndView deleteConfirm(@PathVariable(name = "id") String id) {
 
         if(!this.virusService.deleteVirus(id)){
             throw new IllegalArgumentException("Something went wrong!");
@@ -124,6 +138,5 @@ public class VirusController extends BaseController {
     private void addObjectsInModelAndView(ModelAndView modelAndView) {
         modelAndView.addObject("mutations", Mutation.values());
         modelAndView.addObject("magnitudes", Magnitude.values());
-        modelAndView.addObject("capitals", new ArrayList<>(this.capitalService.findAllCapitals()));
     }
 }
