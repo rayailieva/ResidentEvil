@@ -1,10 +1,18 @@
 package residentevil.domain.entities;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
-public class Role implements GrantedAuthority {
+import javax.persistence.*;
+
+@Entity
+@Table(name = "roles")
+public class UserRole extends BaseEntity implements GrantedAuthority {
 
     private String authority;
+
+    public UserRole() {
+    }
 
     @Override
     public String getAuthority() {

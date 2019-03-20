@@ -1,12 +1,11 @@
 package residentevil.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import residentevil.domain.models.service.UserServiceModel;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    boolean registerUser(UserServiceModel userServiceModel);
-
-    UserServiceModel loginUser(UserServiceModel userServiceModel);
-
+    boolean register(UserServiceModel userServiceModel);
 
 }
