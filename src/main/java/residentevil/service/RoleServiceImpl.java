@@ -28,6 +28,7 @@ public class RoleServiceImpl implements RoleService {
         List<UserRoleViewModel> roleViewModels = new ArrayList<>();
 
         for (UserRole userRole : rolesFromDb) {
+
             UserRoleViewModel userRoleViewModel = this.modelMapper.map(userRole, UserRoleViewModel.class);
 
             roleViewModels.add(userRoleViewModel);

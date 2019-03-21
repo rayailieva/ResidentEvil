@@ -24,10 +24,15 @@
                             <a class="dropdown-item" th:href="@{/viruses/show}">Show</a>
                             <th:block sec:authorize="hasRole('ROLE_ADMIN') and hasRole('USER') and hasRole('MODERATOR')">
                             <a class="dropdown-item" th:href="@{/viruses/add}">Add</a>
-                                <a class="dropdown-item" th:href="@{/users}">Users</a>
                             </th:block>
                         </div>
                     </li>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN') and hasRole('USER')">
+                    <li sec:authorize="isAuthenticated()" class="nav-item active">
+                        <a class="nav-link text-white" th:href="@{/users}">Users<span class="sr-only">(current)</span></a>
+                    </li>
+                </th:block>
+
                 <li sec:authorize="isAuthenticated()" class="nav-item active">
                     <a class="nav-link text-white" th:href="@{/logout}">Logout <span class="sr-only">(current)</span></a>
                 </li>

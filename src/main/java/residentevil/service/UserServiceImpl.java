@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import residentevil.domain.entities.User;
 import residentevil.domain.entities.UserRole;
+import residentevil.domain.models.binding.UserEditBindingModel;
+import residentevil.domain.models.binding.UserRegisterBindingModel;
 import residentevil.domain.models.service.UserServiceModel;
 import residentevil.repository.UserRepository;
 import residentevil.repository.RoleRepository;
@@ -19,36 +21,37 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-   private final UserRepository userRepository;
-   private final RoleRepository roleRepository;
-   private final ModelMapper modelMapper;
-   private final BCryptPasswordEncoder encoder;
+    private UserRepository userRepository;
+    private ModelMapper modelMapper;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private RoleRepository roleRepository;
 
-   @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
-        this.encoder = encoder;
-   }
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     public boolean register(UserServiceModel userServiceModel) {
-        this.seedRolesInDb();
 
         User user = this.modelMapper.map(userServiceModel, User.class);
-        user.setPassword(this.encoder.encode(userServiceModel.getPassword()));
-        this.giveRolesToUser(user);
+        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 
-        try{
-            this.userRepository.saveAndFlush(user);
+        this.insertUserRoles();
 
-            return true;
-        }catch (Exception e){
-            e.printStackTrace();
-
-            return false;
+        if (this.userRepository.count() == 0) {
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_ADMIN"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_MODERATOR"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
+        } else {
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
         }
+
+        this.userRepository.save(user);
+        return true;
     }
 
     @Override
@@ -60,13 +63,51 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository
-                .findByUsername(s)
+                .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 
-    private void seedRolesInDb() {
+    @Override
+    public UserEditBindingModel extractUserForEditById(String id) {
+        User userFromDb = this.userRepository.findById(id).orElse(null);
+
+        if (userFromDb == null) {
+            throw new IllegalArgumentException("Non-existent user.");
+        }
+
+        UserEditBindingModel userBindingModel = this.modelMapper.map(userFromDb, UserEditBindingModel.class);
+
+        for (UserRole userRole : userFromDb.getAuthorities()) {
+            userBindingModel.getRoleAuthorities().add(userRole.getAuthority());
+        }
+
+        return userBindingModel;
+    }
+
+    @Override
+    public boolean insertEditedUser(UserEditBindingModel userEditBindingModel) {
+        User user = this.userRepository.findByUsername(userEditBindingModel.getUsername()).orElse(null);
+        user.getAuthorities().clear();
+
+        if (userEditBindingModel.getRoleAuthorities().contains("ADMIN")) {
+            user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("MODERATOR"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ADMIN"));
+        } else if (userEditBindingModel.getRoleAuthorities().contains("MODERATOR")) {
+            user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("MODERATOR"));
+        } else {
+            user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
+        }
+
+        this.userRepository.save(user);
+
+        return true;
+    }
+
+    private void insertUserRoles() {
         if (this.roleRepository.count() == 0) {
             UserRole userRole = new UserRole();
             userRole.setAuthority("ROLE_USER");
@@ -81,16 +122,6 @@ public class UserServiceImpl implements UserService {
             this.roleRepository.save(adminRole);
             this.roleRepository.save(moderatorRole);
 
-        }
-    }
-
-    private void giveRolesToUser(User user){
-        if(this.userRepository.count() == 0){
-            user.getAuthorities().add(this.roleRepository.findByAuthority("ADMIN"));
-            user.getAuthorities().add(this.roleRepository.findByAuthority("MODERATOR"));
-            user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
-        }else {
-            user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
         }
     }
 }

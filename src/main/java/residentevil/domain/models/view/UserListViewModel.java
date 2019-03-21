@@ -6,7 +6,7 @@ public class UserListViewModel {
 
     private String id;
     private String username;
-    private List<String> authorities;
+    private String authorities;
 
     public UserListViewModel(){}
 
@@ -27,11 +27,11 @@ public class UserListViewModel {
     }
 
 
-    public List<String> getAuthorities() {
+    public String getAuthorities() {
         return this.authorities;
     }
 
-    public void setAuthorities(List<String> authorities) {
+    public void setAuthorities(String authorities) {
         this.authorities = authorities;
     }
 }

@@ -20,7 +20,7 @@ import residentevil.service.UserService;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class UserController {
+public class UserController extends BaseController{
 
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -35,9 +35,7 @@ public class UserController {
     @PreAuthorize("isAnonymous()")
     public ModelAndView register(ModelAndView modelAndView){
 
-        modelAndView.setViewName("register");
-
-        return modelAndView;
+        return super.view("register");
     }
 
     @PostMapping("/register")
@@ -49,8 +47,7 @@ public class UserController {
 
         this.userService.register(this.modelMapper.map(model, UserServiceModel.class));
 
-        modelAndView.setViewName("redirect:/login");
-        return modelAndView;
+        return super.redirect("/login");
     }
 
     @GetMapping("/login")

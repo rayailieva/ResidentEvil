@@ -17,7 +17,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Username</th>
                     <th scope="col">Roles</th>
-
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,6 +26,11 @@
                         <td scope="col" th:text="${iter.index + 1}"></td>
                         <td scope="col" th:text="${user.username}"></td>
                         <td scope="col" th:text="${user.authorities}"></td>
+                        <td scope="col">
+                            <th:block>
+                                <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-info">Edit</a>
+                            </th:block>
+                        </td>
                     </tr>
                 </th:block>
                 </tbody>
