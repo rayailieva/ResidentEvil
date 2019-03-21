@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import residentevil.domain.entities.UserRole;
 
 @Repository
-public interface UserRoleRepository extends JpaRepository<UserRole, String> {
+public interface RoleRepository extends JpaRepository<UserRole, String> {
 
     UserRole findByAuthority(String authority);
 }

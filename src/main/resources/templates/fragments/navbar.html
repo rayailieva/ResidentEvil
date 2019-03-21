@@ -1,4 +1,4 @@
-<th:block th:fragment >
+<th:block th:fragment xmlns:sec="http://www.w3.org/1999/xhtml">
     <nav class="navbar navbar-expand-lg re-backgroud">
         <a class="navbar-brand text-white" th:href="@{/}">Resident Evil</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,21 +10,27 @@
                     <li class="nav-item active">
                         <a class="nav-link text-white" th:href="@{/home}">Home <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li sec:authorize="isAnonymous()" class="nav-item active">
+                        <a class="nav-link text-white" th:href="@{/login}">Login <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li sec:authorize="isAnonymous()" class="nav-item active">
+                        <a class="nav-link text-white" th:href="@{/register}">Register <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Viruses
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" th:href="@{/viruses/show}">Show</a>
+                            <th:block sec:authorize="hasRole('ROLE_ADMIN') and hasRole('USER') and hasRole('MODERATOR')">
                             <a class="dropdown-item" th:href="@{/viruses/add}">Add</a>
+                                <a class="dropdown-item" th:href="@{/users}">Users</a>
+                            </th:block>
                         </div>
                     </li>
-                    <li class="nav-item active">
-                        <a class="nav-link text-white" th:href="@{/login}">Login <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link text-white" th:href="@{/register}">Register <span class="sr-only">(current)</span></a>
-                    </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item active">
+                    <a class="nav-link text-white" th:href="@{/logout}">Logout <span class="sr-only">(current)</span></a>
+                </li>
             </ul>
         </div>
     </nav>

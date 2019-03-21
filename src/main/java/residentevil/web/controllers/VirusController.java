@@ -69,7 +69,7 @@ public class VirusController extends BaseController {
             throw new IllegalArgumentException("Virus creation failed!");
         }
 
-        return super.redirect("/");
+        return super.redirect("/show");
     }
 
     @GetMapping("/show")
@@ -109,7 +109,7 @@ public class VirusController extends BaseController {
 
         this.virusService.editVirus(virusBindingModel);
 
-        return super.redirect("/");
+        return super.redirect("/home");
     }
 
 
@@ -132,7 +132,7 @@ public class VirusController extends BaseController {
         }
 
 
-        return super.redirect("/");
+        return super.redirect("/home");
     }
 
     private void addObjectsInModelAndView(ModelAndView modelAndView) {

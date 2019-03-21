@@ -14,6 +14,7 @@ import residentevil.domain.entities.User;
 import residentevil.domain.models.binding.UserLoginBindingModel;
 import residentevil.domain.models.binding.UserRegisterBindingModel;
 import residentevil.domain.models.service.UserServiceModel;
+import residentevil.domain.models.view.UserListViewModel;
 import residentevil.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -60,6 +61,16 @@ public class UserController {
         return modelAndView;
     }
 
+    @GetMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView logout(ModelAndView modelAndView, HttpSession session){
+
+        session.invalidate();
+
+        modelAndView.setViewName("redirect:/");
+
+        return modelAndView;
+    }
 
 
 }

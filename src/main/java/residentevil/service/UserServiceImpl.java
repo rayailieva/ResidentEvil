@@ -11,23 +11,23 @@ import residentevil.domain.entities.User;
 import residentevil.domain.entities.UserRole;
 import residentevil.domain.models.service.UserServiceModel;
 import residentevil.repository.UserRepository;
-import residentevil.repository.UserRoleRepository;
+import residentevil.repository.RoleRepository;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
    private final UserRepository userRepository;
-   private final UserRoleRepository userRoleRepository;
+   private final RoleRepository roleRepository;
    private final ModelMapper modelMapper;
    private final BCryptPasswordEncoder encoder;
 
    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+        this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
         this.encoder = encoder;
    }
@@ -52,6 +52,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserServiceModel> findAllUsers() {
+        return this.userRepository.findAll()
+                .stream()
+                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         return this.userRepository
                 .findByUsername(s)
@@ -59,30 +67,30 @@ public class UserServiceImpl implements UserService {
     }
 
     private void seedRolesInDb() {
-        if (this.userRoleRepository.count() == 0) {
+        if (this.roleRepository.count() == 0) {
             UserRole userRole = new UserRole();
-            userRole.setAuthority("USER");
+            userRole.setAuthority("ROLE_USER");
 
             UserRole adminRole = new UserRole();
-            adminRole.setAuthority("ADMIN");
+            adminRole.setAuthority("ROLE_ADMIN");
 
             UserRole moderatorRole = new UserRole();
-            moderatorRole.setAuthority("MODERATOR");
+            moderatorRole.setAuthority("ROLE_MODERATOR");
 
-            this.userRoleRepository.save(userRole);
-            this.userRoleRepository.save(adminRole);
-            this.userRoleRepository.save(moderatorRole);
+            this.roleRepository.save(userRole);
+            this.roleRepository.save(adminRole);
+            this.roleRepository.save(moderatorRole);
 
         }
     }
 
     private void giveRolesToUser(User user){
         if(this.userRepository.count() == 0){
-            user.getAuthorities().add(this.userRoleRepository.findByAuthority("ADMIN"));
-            user.getAuthorities().add(this.userRoleRepository.findByAuthority("MODERATOR"));
-            user.getAuthorities().add(this.userRoleRepository.findByAuthority("USER"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ADMIN"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("MODERATOR"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
         }else {
-            user.getAuthorities().add(this.userRoleRepository.findByAuthority("USER"));
+            user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
         }
     }
 }

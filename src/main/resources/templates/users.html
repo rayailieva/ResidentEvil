@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/navbar}"></th:block>
+    </header>
+    <main>
+        <div class="container mt-4">
+            <h1>All Users</h1>
+            <table class="table mt-3">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Roles</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="user, iter : ${users}">
+                    <tr>
+                        <td scope="col" th:text="${iter.index + 1}"></td>
+                        <td scope="col" th:text="${user.username}"></td>
+                        <td scope="col" th:text="${user.authorities}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
