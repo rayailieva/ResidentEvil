@@ -3,15 +3,45 @@
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
 </head>
-<body>
+<body onload="hideAll()">
 <div class="container-fluid">
     <header>
         <th:block th:include="~{fragments/navbar}"></th:block>
     </header>
     <main>
         <div class="container mt-4">
-            <h1>All Viruses</h1>
-            <table class="table mt-3">
+            <h1>Your Choice</h1>
+            <label><input onclick="showViruses()" type="radio" name="viruses" value="viruses">Viruses</label>
+            <label><input  onclick="showCapitals()" type="radio" name="capitals" value="capitals"> Capitals</label>
+
+            <script>
+                function hideAll(){
+                    $('#visualizeText').show();
+                    $('#virusesTable').hide();
+                    $('#capitalsTable').hide();
+                }
+
+                function showViruses() {
+                    $('#visualizeText').hide();
+                    $('#virusesTable').show();
+                    $('#capitalsTable').hide();
+                }
+                function showCapitals() {
+                    $('#visualizeText').hide();
+                    $('#virusesTable').hide();
+                    $('#capitalsTable').show();
+                }
+
+
+            </script>
+
+            <div th:id="visualizeText">
+            <hr/>
+            <h1 class="text-center" >Select what data you want to visualize!</h1>
+            </div>
+
+
+            <table class="table mt-3" th:id="virusesTable">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -24,14 +54,35 @@
                 </thead>
                 <tbody>
                 <th:block th:each="virus, iter : ${viruses}">
+                    <tr>
+                        <td scope="col" th:text="${iter.index + 1}"></td>
+                        <td scope="col" th:text="${virus.name}"></td>
+                        <td scope="col"th:text="${virus.magnitude}"></td>
+                        <td scope="col"th:text="${virus.releasedOn}"></td>
+                        <td scope="col"><a class="btn btn-info"  th:href="@{/viruses/edit/{id}(id=${virus.id})}" th:text="Edit"></a></td>
+                        <td scope="col"><a class="btn btn-info"  th:href="@{/viruses/delete/{id}(id=${virus.id})}" th:text="Delete"></a></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+
+            <table class="table mt-3" th:id="capitalsTable">
+                <thead>
                 <tr>
-                    <td scope="col" th:text="${iter.index + 1}"></td>
-                    <td scope="col" th:text="${virus.name}"></td>
-                    <td scope="col"th:text="${virus.magnitude}"></td>
-                    <td scope="col"th:text="${virus.releasedOn}"></td>
-                    <td scope="col"><a class="btn btn-info"  th:href="@{/viruses/edit/{id}(id=${virus.id})}" th:text="Edit"></a></td>
-                    <td scope="col"><a class="btn btn-info"  th:href="@{/viruses/delete/{id}(id=${virus.id})}" th:text="Delete"></a></td>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Latitude</th>
+                    <th scope="col">Magnitude</th>
                 </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="capital, iter : ${capitals}">
+                    <tr>
+                        <td scope="col" th:text="${iter.index + 1}"></td>
+                        <td scope="col" th:text="${capital.name}"></td>
+                        <td scope="col" th:text="${capital.latitude}"></td>
+                        <td scope="col" th:text="${capital.longitude}"></td>
+                    </tr>
                 </th:block>
                 </tbody>
             </table>

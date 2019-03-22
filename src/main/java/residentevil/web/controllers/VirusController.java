@@ -12,6 +12,7 @@ import residentevil.domain.models.binding.VirusBindingModel;
 import residentevil.domain.models.service.CapitalServiceModel;
 import residentevil.domain.models.service.VirusServiceModel;
 import residentevil.domain.models.view.CapitalListViewModel;
+import residentevil.domain.models.view.CapitalViewModel;
 import residentevil.domain.models.view.VirusListViewModel;
 import residentevil.service.CapitalService;
 import residentevil.service.VirusService;
@@ -69,7 +70,7 @@ public class VirusController extends BaseController {
             throw new IllegalArgumentException("Virus creation failed!");
         }
 
-        return super.redirect("/show");
+        return super.redirect("/viruses/show");
     }
 
     @GetMapping("/show")
@@ -80,6 +81,11 @@ public class VirusController extends BaseController {
         modelAndView.addObject("viruses", this.virusService.findAllViruses()
                 .stream()
                 .map(v -> this.modelMapper.map(v, VirusListViewModel.class))
+                .collect(Collectors.toList()));
+
+        modelAndView.addObject("capitals", this.capitalService.findAllCapitals()
+                .stream()
+                .map(c -> this.modelMapper.map(c, CapitalViewModel.class))
                 .collect(Collectors.toList()));
 
         return super.view("viruses", modelAndView);
