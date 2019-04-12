@@ -49,7 +49,6 @@ public class VirusController extends BaseController {
                 .map(c -> this.modelMapper.map(c, CapitalListViewModel.class))
                 .collect(Collectors.toList()));
 
-
         return super.view("add-virus", modelAndView);
     }
 
